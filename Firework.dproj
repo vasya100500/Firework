@@ -4,11 +4,11 @@
         <ProjectVersion>19.0</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
-        <MainSource>Fireworks.dpr</MainSource>
+        <MainSource>Firework.dpr</MainSource>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -52,7 +52,7 @@
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
-        <SanitizedProjectName>Fireworks</SanitizedProjectName>
+        <SanitizedProjectName>Firework</SanitizedProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_UsePackage>DBXSqliteDriver;RESTComponents;DataSnapServerMidas;DBXDb2Driver;DBXInterBaseDriver;dxSpreadSheetConditionalFormattingDialogsRS27;dxSpreadSheetCoreConditionalFormattingDialogsRS27;vclactnband;dxGaugeControlRS27;vclFireDAC;dxSpreadSheetReportDesignerRS27;dxSpreadSheetRS27;bindcompvclsmp;emsclientfiredac;DataSnapFireDAC;tethering;svnui;dxPSRichEditControlLnkRS27;dxBarDBNavRS27;cxPivotGridOLAPRS27;cxLibraryRS27;dxRibbonCustomizationFormRS27;DBXMSSQLDriver;cxPivotGridRS27;dxADOServerModeRS27;DatasnapConnectorsFreePascal;vcltouch;vcldb;bindcompfmx;svn;dxPScxExtCommonRS27;DBXOracleDriver;inetdb;dxFlowChartDesignerRS27;cxTreeListRS27;dxPScxSchedulerLnkRS27;FmxTeeUI;emsedge;fmx;fmxdae;vcledge;vclib;dxPsPrVwAdvRS27;dbexpress;IndyCore;dxRibbonRS27;vclx;dxPSdxFCLnkRS27;dsnap;DataSnapCommon;emsclient;dxSpellCheckerRS27;FireDACCommon;dxPDFViewerRS27;dxTileControlRS27;RESTBackendComponents;DataSnapConnectors;dxBarExtItemsRS27;cxSchedulerRS27;VCLRESTComponents;soapserver;dxWizardControlRS27;cxSchedulerTreeBrowserRS27;dxRichEditControlRS27;dxPScxTLLnkRS27;vclie;bindengine;DBXMySQLDriver;CloudService;dxADOEMFRS27;dxBarExtDBItemsRS27;DBXFirebirdDriver;dxFlowChartLayoutsRS27;dxPSCoreRS27;cxExportRS27;FireDACCommonDriver;DataSnapClient;dxPScxPivotGridLnkRS27;inet;cxSchedulerWebServiceStorageRS27;cxPivotGridChartRS27;bindcompdbx;IndyIPCommon;dxPSdxOCLnkRS27;vcl;DBXSybaseASEDriver;IndyIPServer;IndySystem;dxHttpIndyRequestRS27;dxFlowChartRS27;dxMapControlRS27;dsnapcon;dxComnRS27;dxPSdxDBOCLnkRS27;dxPSdxGaugeControlLnkRS27;dxPSPrVwRibbonRS27;dxmdsRS27;vclimg;dxEMFRS27;TeeDB;FireDAC;dxPScxVGridLnkRS27;dxCoreRS27;dxPSdxPDFViewerLnkRS27;emshosting;dxPSdxSpreadSheetLnkRS27;cxTreeListdxBarPopupMenuRS27;ibmonitor;DBXOdbcDriver;dxSpreadSheetCoreDialogsRS27;FMXTee;cxSchedulerRibbonStyleEventEditorRS27;soaprtl;DbxCommonDriver;dxTabbedMDIRS27;ibxpress;Tee;dxCloudServiceLibraryRS27;DataSnapServer;xmlrtl;DataSnapNativeClient;ibxbindings;soapmidas;vclwinx;fmxobj;rtl;emsserverresource;DbxClientDriver;dxdborRS27;DBXSybaseASADriver;dxdbtrRS27;CustomIPTransport;vcldsnap;dxPScxCommonRS27;dxPSTeeChartRS27;dxPScxGridLnkRS27;bindcomp;appanalytics;dxPSDBTeeChartRS27;DBXInformixDriver;cxVerticalGridRS27;dxGDIPlusRS27;IndyIPClient;dxFireDACServerModeRS27;dxFlowChartAdvancedCustomizeFormRS27;bindcompvcl;dxDockingRS27;dxServerModeRS27;dxNavBarRS27;dxSpreadSheetCoreRS27;dxRichEditControlCoreRS27;TeeUI;dxorgcRS27;dxPSLnksRS27;cxSchedulerGridRS27;dbxcds;VclSmp;adortl;dxDBXServerModeRS27;DataSnapIndy10ServerTransport;cxGridRS27;DataSnapProviderClient;dsnapxml;dbrtl;IndyProtocols;inetdbxpress;dxBarRS27;dxFireDACEMFRS27;dxPSdxLCLnkRS27;dxPSdxMapControlLnkRS27;dxPSdxDBTVLnkRS27;dxtrmdRS27;fmxase;$(DCC_UsePackage)</DCC_UsePackage>
@@ -116,16 +116,16 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">Fireworks.dpr</Source>
+                    <Source Name="MainSource">Firework.dpr</Source>
                 </Source>
             </Delphi.Personality>
             <Platforms>
                 <Platform value="Win32">True</Platform>
             </Platforms>
             <Deployment Version="3">
-                <DeployFile LocalName="Win32\Debug\Fireworks.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="Win32\Debug\Firework.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>Fireworks.exe</RemoteName>
+                        <RemoteName>Firework.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

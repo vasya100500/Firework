@@ -5,8 +5,11 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uFireworkModel, uFireworkController,
-  Vcl.ExtCtrls, uTypes, System.Math, uHelpers,
+  Vcl.ExtCtrls, uTypes, System.Math, uHelpers, MMSystem,
   System.Generics.Defaults, System.Generics.Collections, Vcl.AppEvnts;
+
+const
+  WM_TIMER_DRAW = WM_USER + 1;
 
 type
   TBallPatern = (BP_Red, BP_Green, BP_Blue, BP_White, BP_LGBT);
@@ -15,18 +18,18 @@ type
     TimerBallController: TTimer;
     TimerNewBall: TTimer;
     TimerShowFPS: TTimer;
-    ApplicationEvents1: TApplicationEvents;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure TimerBallControllerTimer(Sender: TObject);
     procedure TimerNewBallTimer(Sender: TObject);
     procedure TimerShowFPSTimer(Sender: TObject);
-    procedure ApplicationEvents1Idle(Sender: TObject; var Done: Boolean);
+    procedure OnTimerDraw(var Message: TMessage); message WM_TIMER_DRAW;
   private
     FFPS: Integer;
     FBallController: TBallController;
     FBallList: TObjectList<TBall>;
-    procedure CreateBall(APos: TPos; APartCount: Integer; ABallPatern: TBallPatern);
+    FMMTimer: Integer;
+    procedure CreateBall(APos: TPos; ADistance: Single; APartCount: Integer; ABallPatern: TBallPatern);
     procedure Draw;
   public
   end;
@@ -37,6 +40,16 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TimerDraw(TimerID, Msg: Uint; dwUser, dw1, dw2: DWORD); pascal;
+begin
+  SendMessage(fmFireworkView.Handle, WM_TIMER_DRAW, 0, 0);
+end;
+
+procedure TfmFireworkView.OnTimerDraw(var Message: TMessage);
+begin
+  fmFireworkView.Draw;
+end;
 
 procedure TfmFireworkView.FormCreate(Sender: TObject);
 begin
@@ -49,20 +62,18 @@ begin
   FBallController.Gravity := 0.1;
 
   FFPS := 0;
+
+  FMMTimer := TimeSetEvent(10, 0, @TimerDraw, 0, TIME_PERIODIC);
 end;
 
 procedure TfmFireworkView.FormDestroy(Sender: TObject);
 begin
   FreeAndNil(FBallList);
   FreeAndNil(FBallController);
+  TimeKillEvent(FMMTimer);
 end;
 
-procedure TfmFireworkView.ApplicationEvents1Idle(Sender: TObject; var Done: Boolean);
-begin
-  Draw;
-end;
-
-procedure TfmFireworkView.CreateBall(APos: TPos; APartCount: Integer; ABallPatern: TBallPatern);
+procedure TfmFireworkView.CreateBall(APos: TPos; ADistance: Single; APartCount: Integer; ABallPatern: TBallPatern);
 var
   Particle: TParticle;
   iBall: Integer;
@@ -71,11 +82,13 @@ var
   Speed: Single;
 begin
   iBall := FBallList.Add(TBall.Create(APos));
+  Particle := nil;
 
   for i := 1 to APartCount do
   begin
     case ABallPatern of
-      BP_White : begin
+      BP_White:
+      begin
         Particle := TParticle.Create(
           TPos.Create(0, 0),
           TRGB.Create(RandomRange(200, 255), RandomRange(200, 255), RandomRange(200, 255))
@@ -86,7 +99,8 @@ begin
         Particle.LifeTime := 100 + Random(50);
       end;
 
-      BP_Red, BP_Green, BP_Blue, BP_LGBT: begin
+      BP_Red, BP_Green, BP_Blue, BP_LGBT:
+      begin
         if i < APartCount / 10 then
         begin
           Particle := TParticle.Create(
@@ -121,6 +135,7 @@ begin
     Particle.Velocity.X.Mult(Speed);
     Particle.Velocity.Y.Mult(Speed);
 
+    FBallList[iBall].Distance := ADistance;
     FBallList[iBall].AddParticle(Particle);
   end;
 end;
@@ -186,8 +201,7 @@ begin
     );
 
     ScreenBMP.Canvas.CopyRect(ScreenBMP.Canvas.ClipRect, Self.Canvas, Self.Canvas.ClipRect);
-//    if FFPS mod 5 = 0 then
-      RGBColors(ScreenBMP, -10, -10, -10);
+    RGBColors(ScreenBMP, -10, -10, -10);
 
     for i := FBallList.Count - 1 downto 0 do
     begin
@@ -201,12 +215,13 @@ begin
 
           ScreenBMP.Canvas.Brush.Color := Particle.Color.ToColor;
           ScreenBMP.Canvas.Pen.Color := Particle.Color.ToColor;
+
           ScreenBMP.Canvas.Ellipse(
             Rect(
-              Round(Ball.Pos.X + Particle.Pos.X - (Particle.Size / 2)),
-              Round(Ball.Pos.Y + Particle.Pos.Y - (Particle.Size / 2)),
-              Round(Ball.Pos.X + Particle.Pos.X + (Particle.Size / 2)),
-              Round(Ball.Pos.Y + Particle.Pos.Y + (Particle.Size / 2))
+              Round(Ball.Pos.X + Particle.Pos.X / Ball.Distance - (Particle.Size / 2 / Ball.Distance)),
+              Round(Ball.Pos.Y + Particle.Pos.Y / Ball.Distance - (Particle.Size / 2 / Ball.Distance)),
+              Round(Ball.Pos.X + Particle.Pos.X / Ball.Distance + (Particle.Size / 2 / Ball.Distance)),
+              Round(Ball.Pos.Y + Particle.Pos.Y / Ball.Distance + (Particle.Size / 2 / Ball.Distance))
             )
           );
         end;
@@ -239,20 +254,52 @@ end;
 
 procedure TfmFireworkView.TimerShowFPSTimer(Sender: TObject);
 begin
-  Self.Caption := 'FPS ' + FFPS.ToString;
+  Self.Caption := 'FPS ' + FFPS.ToString + ' Balls ' + FBallList.Count.ToString;
   FFPS := 0;
 end;
 
 procedure TfmFireworkView.TimerNewBallTimer(Sender: TObject);
+var
+  Pos: TPos;
 begin
-  TimerNewBall.Interval := RandomRange(300, 2000);
+  TimerNewBall.Interval := RandomRange(300, 1000);
+
+  // Генерируем каждый раз в разной четверти экрана
+  TimerNewBall.Tag := TimerNewBall.Tag + 1;
+  case TimerNewBall.Tag of
+    1: begin
+      Pos := TPos.Create(
+        RandomRange(100, Round(Self.ClientWidth / 2)),
+        RandomRange(100, Round(Self.ClientHeight / 2))
+      );
+    end;
+    2: begin
+      Pos := TPos.Create(
+        RandomRange(Round(Self.ClientWidth / 2), Self.ClientWidth - 100),
+        RandomRange(100, Round(Self.ClientHeight / 2))
+      );
+    end;
+    3: begin
+      Pos := TPos.Create(
+        RandomRange(100, Round(Self.ClientWidth / 2)),
+        RandomRange(Round(Self.ClientHeight / 2), Self.ClientHeight - 200)
+      );
+    end;
+    4:
+    begin
+      Pos := TPos.Create(
+        RandomRange(Round(Self.ClientWidth / 2), Self.ClientWidth - 100),
+        RandomRange(Round(Self.ClientHeight / 2), Self.ClientHeight - 200)
+      );
+
+      TimerNewBall.Tag := 0;
+    end;
+  end;
 
   CreateBall(
-    TPos.Create(
-      RandomRange(100, Self.ClientWidth - 100),
-      RandomRange(100, Self.ClientHeight - 300)
-    ),
-    RandomRange(100, 300),
+    Pos,
+    RandomRange(1, 3),
+    RandomRange(50, 300),
     TBallPatern(RandomRange(0, 5))
   );
 end;

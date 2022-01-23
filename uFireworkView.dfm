@@ -1,9 +1,9 @@
 object fmFireworkView: TfmFireworkView
   Left = 0
   Top = 0
-  Caption = 'Fireworks'
-  ClientHeight = 800
-  ClientWidth = 1200
+  Caption = 'Firework'
+  ClientHeight = 692
+  ClientWidth = 1272
   Color = clBlack
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,7 +13,6 @@ object fmFireworkView: TfmFireworkView
   OldCreateOrder = False
   Position = poScreenCenter
   Scaled = False
-  WindowState = wsMaximized
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
@@ -34,10 +33,5 @@ object fmFireworkView: TfmFireworkView
     OnTimer = TimerShowFPSTimer
     Left = 296
     Top = 72
-  end
-  object ApplicationEvents1: TApplicationEvents
-    OnIdle = ApplicationEvents1Idle
-    Left = 112
-    Top = 160
   end
 end

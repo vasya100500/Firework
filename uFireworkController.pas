@@ -27,12 +27,12 @@ var
 begin
   for Particle in ABall.ParticlesList do
   begin
-    Particle.Pos.X.Add(Particle.Velocity.X);
-    Particle.Pos.Y.Add(Particle.Velocity.Y);
-    Particle.Velocity.X.Add(-Particle.Velocity.X * FFriction * Particle.Size);
-    Particle.Velocity.Y.Add(-Particle.Velocity.Y * FFriction * Particle.Size);
-    Particle.Velocity.Y.Add(FGravity);
-    Particle.Size.Add(Particle.ExpansionRate, Particle.Size <= Particle.MaxSize);
+    Particle.Pos.X.Inc(Particle.Velocity.X);
+    Particle.Pos.Y.Inc(Particle.Velocity.Y);
+    Particle.Velocity.X.Inc(-Particle.Velocity.X * FFriction * Particle.Size);
+    Particle.Velocity.Y.Inc(-Particle.Velocity.Y * FFriction * Particle.Size);
+    Particle.Velocity.Y.Inc(FGravity);
+    Particle.Size.Inc(Particle.ExpansionRate, Particle.Size <= Particle.MaxSize);
     Particle.LifeTime.Dec(1);
 
     if Particle.LifeTime = 0 then

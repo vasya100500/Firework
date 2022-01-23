@@ -9,8 +9,8 @@ type
   TSingleHelper = record helper for Single
   private
   public
-    function Add(AValue: Single): Single; overload;
-    function Add(AValue: Single; ACondition: Boolean): Single; overload;
+    function Inc(AValue: Single): Single; overload;
+    function Inc(AValue: Single; ACondition: Boolean): Single; overload;
     function Mult(AValue: Single): Single;
   end;
 
@@ -33,16 +33,16 @@ implementation
 
 { TSingleHelper }
 
-function TSingleHelper.Add(AValue: Single): Single;
+function TSingleHelper.Inc(AValue: Single): Single;
 begin
   Self := Self + AValue;
   Result := Self;
 end;
 
-function TSingleHelper.Add(AValue: Single; ACondition: Boolean): Single;
+function TSingleHelper.Inc(AValue: Single; ACondition: Boolean): Single;
 begin
   if ACondition then
-    Result := Add(AValue)
+    Result := Inc(AValue)
   else
     Result := Self;
 end;

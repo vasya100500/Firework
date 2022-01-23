@@ -1,4 +1,4 @@
-program Fireworks;
+program Firework;
 
 uses
   Vcl.Forms,

@@ -33,6 +33,7 @@ type
   TBall = class
   private
     FPos: TPos;
+    FDistance: Single;
     FParticlesList: TObjectList<TParticle>;
   public
     constructor Create(APos: TPos);
@@ -40,6 +41,7 @@ type
     function AddParticle(AParticle: TParticle): Integer;
     procedure AddParticleMass(AParticle: TParticle; ACount: Integer = 1);
     property Pos: TPos read FPos write FPos;
+    property Distance: Single read FDistance write FDistance;
     property ParticlesList: TObjectList<TParticle> read FParticlesList;
   end;
 
@@ -78,6 +80,7 @@ end;
 constructor TBall.Create(APos: TPos);
 begin
   FPos := APos;
+  FDistance := 1;
   FParticlesList := TObjectList<TParticle>.Create;
 end;
 
